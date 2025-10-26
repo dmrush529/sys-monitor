@@ -9,7 +9,7 @@ fn main() {
     //loop to constantly display temp data
     loop {
         //clear all lines printed by the last print
-        println!("{esc}c", esc = 27 as char);
+        print!("{esc}c", esc = 27 as char);
         //iterate each component and refresh their info
         sys.refresh_all();
         let components = Components::new_with_refreshed_list();
