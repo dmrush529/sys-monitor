@@ -1,24 +1,32 @@
+use std::thread::sleep;
+use std::time::Duration;
 //system monitor specifically for component temps
 //import sysinfo crate
 use sysinfo::*;
 
-fn main() {
-    //create new system entry with sysinfo
+//create async function for the loop
+async fn temp_display() {
+
+    //create new system for sysinfo
     let mut sys = System::new_all();
 
-    //loop to constantly display temp data
+    //implement the loop
     loop {
-        //clear all lines printed by the last print
+        //clear all lines
         print!("{esc}c", esc = 27 as char);
-        //iterate each component and refresh their info
+
+        //iterate the components
         sys.refresh_all();
         let components = Components::new_with_refreshed_list();
-        //print to terminal
+
         for component in &components {
             println!("{component:?}");
-        };
-        //wait one second before doing it again
-        std::thread::sleep(std::time::Duration::from_secs(1));
+        }
+        sleep(Duration::from_secs(1));
     }
-
+}
+#[tokio::main(flavor = "current_thread")]
+async fn main() {
+    //call our async function
+    temp_display().await;
 }
